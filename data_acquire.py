@@ -16,7 +16,7 @@ from database import upsert_dis
 
 DIS_SOURCE = "https://eonet.sci.gsfc.nasa.gov/api/v2.1/events"
 MAX_DOWNLOAD_ATTEMPT = 5
-DOWNLOAD_PERIOD = 10         # second
+DOWNLOAD_PERIOD = 30        # second
 logger = logging.Logger(__name__)
 utils.setup_logger(logger, 'data.log')
 
@@ -27,7 +27,7 @@ def download_disaster(url=DIS_SOURCE, retries=MAX_DOWNLOAD_ATTEMPT, limit = 10, 
     js = None
     for _ in range(retries):
         try:
-            req = requests.get(f"{url}?limit={limit}&days={days}", timeout=timeout)
+            req = requests.get(f"{url}?limit={limit}&days={days}&status={status}", timeout=timeout)
             req.raise_for_status()
             text = req.text
             js = json.loads(text)

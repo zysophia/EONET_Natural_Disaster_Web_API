@@ -7,7 +7,7 @@ import utils
 client = pymongo.MongoClient()
 logger = logging.Logger(__name__)
 utils.setup_logger(logger, 'db.log')
-RESULT_CACHE_EXPIRATION = 10             # seconds
+RESULT_CACHE_EXPIRATION = 20             # seconds
 
 
 def upsert_dis(df):
