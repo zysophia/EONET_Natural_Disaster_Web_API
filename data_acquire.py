@@ -27,7 +27,7 @@ def download_disaster(url=DIS_SOURCE, retries=MAX_DOWNLOAD_ATTEMPT, limit = 10, 
     js = None
     for i in range(retries):
         try:
-            req = requests.get(f"{url}?limit={limit}&days={days}", timeout=1.0)
+            req = requests.get(f"{url}?limit={limit}&days={days}", timeout=10.0)
             req.raise_for_status()
             text = req.text
             js = json.loads(text)
@@ -58,7 +58,7 @@ def filter_dis(js):
 
 
 def update_once():
-    t = download_disaster(limit = 10, days = 10)
+    t = download_disaster(limit = 10000, days = 1000)
     df = filter_dis(t)
     upsert_dis(df)
 
