@@ -25,7 +25,7 @@ def download_disaster(url=DIS_SOURCE, retries=MAX_DOWNLOAD_ATTEMPT, limit = 10, 
     Returns None if network failed
     """
     js = None
-    for i in range(retries):
+    for _ in range(retries):
         try:
             req = requests.get(f"{url}?limit={limit}&days={days}", timeout=10.0)
             req.raise_for_status()
@@ -58,7 +58,7 @@ def filter_dis(js):
 
 
 def update_once():
-    t = download_disaster(limit = 10000, days = 1000)
+    t = download_disaster(limit = 1000, days = 1000)
     df = filter_dis(t)
     upsert_dis(df)
 

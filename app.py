@@ -147,7 +147,7 @@ _what_if_data_cache = None
 def what_if_handler(wind, hydro):
     """Changes the display graph of supply-demand"""
     df = fetch_all_dis_as_df(allow_cached=True)
-
+    print(df)
     fig = go.Figure()
     return fig
 

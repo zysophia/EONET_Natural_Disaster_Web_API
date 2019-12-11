@@ -2,7 +2,6 @@ import logging
 import pymongo
 import pandas as pd
 import expiringdict
-
 import utils
 
 client = pymongo.MongoClient()
