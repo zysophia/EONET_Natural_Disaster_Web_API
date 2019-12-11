@@ -21,7 +21,7 @@ def upsert_dis(df):
     for record in df.to_dict('records'):
         print(record)
         result = collection.replace_one(
-            filter=record,    # locate the document if exists
+            filter=record,                              # locate the document if exists
             replacement=record,                         # latest document
             upsert=True)                                # update if exists, insert if not
         if result.matched_count > 0:
