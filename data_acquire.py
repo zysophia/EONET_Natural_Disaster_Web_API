@@ -20,14 +20,14 @@ DOWNLOAD_PERIOD = 10         # second
 logger = logging.Logger(__name__)
 utils.setup_logger(logger, 'data.log')
 
-def download_disaster(url=DIS_SOURCE, retries=MAX_DOWNLOAD_ATTEMPT, limit = 10, days = 2):
+def download_disaster(url=DIS_SOURCE, retries=MAX_DOWNLOAD_ATTEMPT, limit = 10, days = 2, status = "open", timeout = 1.0):
     """Returns disaster information text from `DIS_SOURCE` that includes disaster information
     Returns None if network failed
     """
     js = None
     for _ in range(retries):
         try:
-            req = requests.get(f"{url}?limit={limit}&days={days}", timeout=10.0)
+            req = requests.get(f"{url}?limit={limit}&days={days}", timeout=timeout)
             req.raise_for_status()
             text = req.text
             js = json.loads(text)
@@ -47,20 +47,32 @@ def filter_dis(js):
         tit = x["categories"][0]["title"].replace(" ","_")
         if tit not in filter_tits:
             continue
+        id = x["categories"][0]["id"]
+        subtit, subid, url = x['title'], x['id'], x['sources'][0]['url']
         g = x["geometries"]
         for gg in g:
             dt, geo = pd.to_datetime(gg["date"]), gg['coordinates']
-            singled = [tit, dt, geo[0], geo[1]]
+            singled = [id, tit, subtit, subid, dt, geo[0], geo[1], url]
             data.append(singled)
     data = np.array(data)
-    df = pd.DataFrame(data, columns = ["title", "datetime", "geo1", "geo2"])
+    df = pd.DataFrame(data, columns = ["id", "title", "subid", "subtitle", "datetime", "geo1", "geo2", "url"])
     return df
 
 
 def update_once():
-    t = download_disaster(limit = 1000, days = 1000)
+    t = download_disaster(limit = 100, days = 5)
     df = filter_dis(t)
     upsert_dis(df)
+
+def update_history():
+    try:
+        t = download_disaster(limit = 1000000, days = 1000, status = "closed", timeout = 15.0)
+        df = filter_dis(t)
+        upsert_dis(df)
+    except Exception as e:
+            logger.warning("history disaster worker ignores exception and continues: {}".format(e))
+
+
 
 def main_loop(timeout=DOWNLOAD_PERIOD):
     scheduler = sched.scheduler(time.time, time.sleep)
@@ -78,4 +90,5 @@ def main_loop(timeout=DOWNLOAD_PERIOD):
 
 
 if __name__ == '__main__':
+    update_history()
     main_loop()
