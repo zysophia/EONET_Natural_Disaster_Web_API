@@ -60,7 +60,7 @@ def filter_dis(js):
 def update_once():
     t = download_disaster(limit = 10, days = 10)
     df = filter_dis(t)
-    upsert_bpa(df)
+    upsert_dis(df)
 
 def main_loop(timeout=DOWNLOAD_PERIOD):
     scheduler = sched.scheduler(time.time, time.sleep)
