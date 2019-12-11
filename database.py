@@ -19,7 +19,6 @@ def upsert_dis(df):
     collection = db.get_collection("disasters")
     update_count = 0
     for record in df.to_dict('records'):
-        print(record)
         result = collection.replace_one(
             filter=record,                              # locate the document if exists
             replacement=record,                         # latest document
@@ -29,3 +28,40 @@ def upsert_dis(df):
     logger.info("rows={}, update={}, ".format(df.shape[0], update_count) +
                 "insert={}".format(df.shape[0]-update_count))
 
+
+def fetch_all_dis():
+    db = client.get_database("disaster")
+    collection = db.get_collection("disasters")
+    return list(collection.find())
+
+
+_fetch_all_dis_as_df_cache = expiringdict.ExpiringDict(max_len=1,
+                                                       max_age_seconds=RESULT_CACHE_EXPIRATION)
+
+
+def fetch_all_dis_as_df(allow_cached=False):
+    """Converts list of dicts returned by `fetch_all_dis` to DataFrame with ID removed
+    Actual job is done in `_worker`. When `allow_cached`, attempt to retrieve timed cached from
+    `_fetch_all_dis_as_df_cache`; ignore cache and call `_work` if cache expires or `allow_cached`
+    is False.
+    """
+    def _work():
+        data = fetch_all_dis()
+        if len(data) == 0:
+            return None
+        df = pd.DataFrame.from_records(data)
+        df.drop('_id', axis=1, inplace=True)
+        return df
+
+    if allow_cached:
+        try:
+            return _fetch_all_dis_as_df_cache['cache']
+        except KeyError:
+            pass
+    ret = _work()
+    _fetch_all_dis_as_df_cache['cache'] = ret
+    return ret
+
+
+if __name__ == '__main__':
+    print(fetch_all_dis_as_df())
