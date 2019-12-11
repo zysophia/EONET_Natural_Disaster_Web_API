@@ -11,7 +11,7 @@ import numpy as np
 from io import StringIO
 
 import utils
-#from database import upsert_bpa
+from database import upsert_dis
 
 
 DIS_SOURCE = "https://eonet.sci.gsfc.nasa.gov/api/v2.1/events"
@@ -60,7 +60,7 @@ def filter_dis(js):
 def update_once():
     t = download_disaster(limit = 10, days = 10)
     df = filter_dis(t)
-    #upsert_bpa(df)
+    upsert_bpa(df)
 
 def main_loop(timeout=DOWNLOAD_PERIOD):
     scheduler = sched.scheduler(time.time, time.sleep)
