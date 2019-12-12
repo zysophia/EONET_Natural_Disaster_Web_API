@@ -16,7 +16,7 @@ from database import upsert_dis
 
 DIS_SOURCE = "https://eonet.sci.gsfc.nasa.gov/api/v2.1/events"
 MAX_DOWNLOAD_ATTEMPT = 5
-DOWNLOAD_PERIOD = 30        # second
+DOWNLOAD_PERIOD = 60        # second
 logger = logging.Logger(__name__)
 utils.setup_logger(logger, 'data.log')
 
@@ -47,13 +47,16 @@ def filter_dis(js):
         tit = x["categories"][0]["title"].replace(" ","_")
         if tit not in filter_tits:
             continue
-        id = x["categories"][0]["id"]
-        subtit, subid, url = x['title'], x['id'], x['sources'][0]['url']
-        g = x["geometries"]
-        for gg in g:
-            dt, geo = pd.to_datetime(gg["date"]), gg['coordinates']
-            singled = [id, tit, subtit, subid, dt, geo[0], geo[1], url]
-            data.append(singled)
+        try:
+            id = x["categories"][0]["id"]
+            subtit, subid, url = x['title'], x['id'], x['sources'][0]['url'] if x["sources"] else None
+            g = x["geometries"]
+            for gg in g:
+                dt, geo = pd.to_datetime(gg["date"]), gg['coordinates']
+                singled = [id, tit, subtit, subid, dt, geo[0], geo[1], url]
+                data.append(singled)
+        except:
+            continue
     data = np.array(data)
     df = pd.DataFrame(data, columns = ["id", "title", "subid", "subtitle", "datetime", "geo1", "geo2", "url"])
     return df
