@@ -3,6 +3,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import numpy as np
 import plotly.graph_objects as go
+from dash.dependencies import Input, Output
 
 from database import fetch_all_dis_as_df
 
@@ -21,11 +22,11 @@ def page_header():
     Returns the page header as a dash `html.Div`
     """
     return html.Div(id='header', children=[
-        html.Div([html.H3('Visualization with datashader and Plotly')],
+        html.Div([html.H3('EONET Natural Disaster Analysis')],
                  className="ten columns"),
-        html.A([html.Img(id='logo', src=app.get_asset_url('github.png'),
-                         style={'height': '35px', 'paddingTop': '7%'}),
-                html.Span('Data1050LWCZ', style={'fontSize': '2rem', 'height': '35px', 'bottom': 0,
+        html.A([html.Img(id='logo', src=app.get_asset_url('404_img.png'),
+                         style={'height': '20px', 'paddingTop': '10%'}),
+                html.Span('Data1050-Team-404!', style={'fontSize': '1.7rem', 'height': '45px', 'bottom': '15px',
                                                 'paddingLeft': '4px', 'color': '#a3a7b0',
                                                 'textDecoration': 'none'})],
                className="two columns row",
@@ -38,7 +39,7 @@ def description():
     Returns overall project description in markdown
     """
     return html.Div(children=[dcc.Markdown('''
-        OverAll Project description MarkDown
+        In this part we will give a visualization of recent disasters.
         ''', className='eleven columns', style={'paddingLeft': '5%'})], className="row")
 
 

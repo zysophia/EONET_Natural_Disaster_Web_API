@@ -63,7 +63,7 @@ def filter_dis(js):
 
 
 def update_once():
-    t = download_disaster(limit = 100, days = 5)
+    t = download_disaster(limit = 1000, days = 100)
     df = filter_dis(t)
     upsert_dis(df)
 
@@ -76,7 +76,7 @@ def update_history():
         upsert_dis(df)
         print("History disaster data updated..........")
     except Exception as e:
-            logger.warning("history disaster worker ignores exception and continues: {}".format(e))
+        logger.warning("history disaster worker ignores exception and continues: {}".format(e))
 
 
 
