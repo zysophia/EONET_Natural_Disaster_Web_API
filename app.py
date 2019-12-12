@@ -49,20 +49,27 @@ def disaster_visualization_tool():
     Returns the disaster_visualization tool as a dash `html.Div`.
     """
     return html.Div(children=[
-        #html.Div(children=[dcc.Graph(id='dis-figure')], className='nine columns'),
+        html.H5("Disaster Visualization", style={'fontSize': '3rem', 'height': '45px', 'bottom': '15px',
+                                                'paddingLeft': '4px', 'color': '#a3a7b0',
+                                                'textDecoration': 'none', 'text-align':'center'}),
 
         html.Div(children=[
             html.Div(children=[
                 dcc.Checklist(id='status-checkbox', 
                               options=[
-                                {'label': 'New York City', 'value': 'NYC'},
-                                {'label': 'Montréal', 'value': 'MTL'},
-                                {'label': 'San Francisco', 'value': 'SF'}],
-                              value=['MTL', 'SF'],
+                                {'label': 'open', 'value': 'open'},
+                                {'label': 'closed', 'value': 'closed'}],
+                              value=['open', 'closed'],
                               labelStyle={'display': 'inline-block'},
-                              style={'marginTop': '2rem'})]),
-            html.H5("Rescale Power Supply", style={'marginTop': '2rem'}),
-        ], className='three columns', style={'marginLeft': 5, 'marginTop': '10%'}),
+                              style={'marginTop': '1rem', 'text-align':'center', 'margin-Left': '4px'})]),
+                dcc.RadioItems(id='disaster-click', 
+                              options=[
+                                {'label': 'Wildfires', 'value': 'Wildfires'},
+                                {'label': 'storm', 'value': 'storm'},
+                                {'label': 'ice', 'value': 'ice'}],
+                              value=['Wildfires'],
+                              style={'marginTop': '1rem', 'text-align':'center', 'margin-Left': '4px'}),
+        ], className='eleven columns', style={'marginLeft': 5, 'marginTop': '10%'}),
     ], className='row eleven columns')
 
 
@@ -139,7 +146,7 @@ app.layout = html.Div([
     description(),
     disaster_visualization_tool(),
     # dcc.Graph(id='trend-graph', figure=static_stacked_trend_graph(stack=False)),
-    dcc.Graph(id='stacked-trend-graph', figure=static_stacked_trend_graph(stack=True)),
+    #dcc.Graph(id='stacked-trend-graph', figure=static_stacked_trend_graph(stack=True)),
     what_if_description(),
     what_if_tool(),
     architecture_summary(),
