@@ -70,7 +70,9 @@ def update_once():
 def update_history():
     try:
         t = download_disaster(limit = 10000, days = 10000, status = "closed", timeout = 60.0)
+        print("History disaster data requested..........")
         df = filter_dis(t)
+        print("History disaster data filtered..........")
         upsert_dis(df)
         print("History disaster data updated..........")
     except Exception as e:
