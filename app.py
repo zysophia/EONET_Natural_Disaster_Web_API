@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 
 from database import fetch_all_dis_as_df
+from visualization import map_plot
 
 # Definitions of constants. This projects uses extra CSS stylesheet at `./assets/style.css`
 COLORS = ['rgb(67,67,67)', 'rgb(115,115,115)', 'rgb(49,130,189)', 'rgb(189,189,189)']
@@ -30,7 +31,7 @@ def page_header():
                                                 'paddingLeft': '4px', 'color': '#a3a7b0',
                                                 'textDecoration': 'none'})],
                className="two columns row",
-               href='https://github.com/zysophia/'),
+               href='https://github.com/zysophia/EONET_Natural_Disaster_Web_API'),
     ], className="row")
 
 
@@ -50,8 +51,8 @@ def static_stacked_trend_graph(stack=False):
     df = fetch_all_dis_as_df()
     if df is None:
         return go.Figure()
-
-    return go.Figure()
+    return map_plot(df)
+    #return go.Figure()
 
 def what_if_description():
     """
