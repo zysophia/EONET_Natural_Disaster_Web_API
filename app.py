@@ -44,6 +44,31 @@ def description():
         ''', className='eleven columns', style={'paddingLeft': '5%'})], className="row")
 
 
+def disaster_visualization_tool():
+    """
+    Returns the disaster_visualization tool as a dash `html.Div`.
+    """
+    return html.Div(children=[
+        html.Div(children=[dcc.Graph(id='what-if-figure')], className='nine columns'),
+
+        html.Div(children=[
+            html.H5("Rescale Power Supply", style={'marginTop': '2rem'}),
+            html.Div(children=[
+                dcc.Slider(id='wind-scale-slider', min=0, max=4, step=0.1, value=2.5, className='row',
+                           marks={x: str(x) for x in np.arange(0, 4.1, 1)})
+            ], style={'marginTop': '5rem'}),
+
+            html.Div(id='wind-scale-text', style={'marginTop': '1rem'}),
+
+            html.Div(children=[
+                dcc.Slider(id='hydro-scale-slider', min=0, max=4, step=0.1, value=0,
+                           className='row', marks={x: str(x) for x in np.arange(0, 4.1, 1)})
+            ], style={'marginTop': '3rem'}),
+            html.Div(id='hydro-scale-text', style={'marginTop': '1rem'}),
+        ], className='three columns', style={'marginLeft': 5, 'marginTop': '10%'}),
+    ], className='row eleven columns')
+
+
 def static_stacked_trend_graph(stack=False):
     """
     Returns a figure.
@@ -115,6 +140,7 @@ app.layout = html.Div([
     page_header(),
     html.Hr(),
     description(),
+    disaster_visualization_tool()
     # dcc.Graph(id='trend-graph', figure=static_stacked_trend_graph(stack=False)),
     dcc.Graph(id='stacked-trend-graph', figure=static_stacked_trend_graph(stack=True)),
     what_if_description(),
