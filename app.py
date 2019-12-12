@@ -140,7 +140,7 @@ app.layout = html.Div([
     page_header(),
     html.Hr(),
     description(),
-    disaster_visualization_tool()
+    disaster_visualization_tool(),
     # dcc.Graph(id='trend-graph', figure=static_stacked_trend_graph(stack=False)),
     dcc.Graph(id='stacked-trend-graph', figure=static_stacked_trend_graph(stack=True)),
     what_if_description(),
