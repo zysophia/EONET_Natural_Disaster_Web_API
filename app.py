@@ -58,15 +58,15 @@ def disaster_visualization_tool():
                 html.Div(children=[
                     html.H5("Disaster Status", style={'fontSize': '1.5rem', 'height': '45px', 'bottom': '0px',
                                                     'paddingLeft': '4px', 'color': '#a3a7b0',
-                                                    'textDecoration': 'none', 'text-align':'center'}),
+                                                    'textDecoration': 'none', 'text-align':'center', 'display': 'inline-block'}),
                     dcc.Checklist(id='status-checkbox', 
                                 options=[
                                     {'label': 'open', 'value': 'open'},
                                     {'label': 'closed', 'value': 'closed'}],
                                 value=['open', 'closed'],
                                 labelStyle={'display': 'inline-block'},
-                                style={'text-align':'center', 'margin-Left': '4px'})
-                                ], className='three rows'),
+                                style={'text-align':'center', 'margin-Left': '4px', 'display': 'inline-block'})
+                                ], className='parent', style={'display': 'inline-block'}),
                 html.Div(children=[
                     html.H5("Disaster Kind", style={'fontSize': '1.5rem', 'height': '45px', 'bottom': '15px',
                                                 'paddingLeft': '4px', 'color': '#a3a7b0',
