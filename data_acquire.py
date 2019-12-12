@@ -69,9 +69,10 @@ def update_once():
 
 def update_history():
     try:
-        t = download_disaster(limit = 100000, days = 10000, status = "closed", timeout = 60.0)
+        t = download_disaster(limit = 10000, days = 10000, status = "closed", timeout = 60.0)
         df = filter_dis(t)
         upsert_dis(df)
+        print("History disaster data updated..........")
     except Exception as e:
             logger.warning("history disaster worker ignores exception and continues: {}".format(e))
 
