@@ -55,22 +55,33 @@ def disaster_visualization_tool():
 
         html.Div(children=[
             html.Div(children=[
-                dcc.Checklist(id='status-checkbox', 
-                              options=[
-                                {'label': 'open', 'value': 'open'},
-                                {'label': 'closed', 'value': 'closed'}],
-                              value=['open', 'closed'],
-                              labelStyle={'display': 'inline-block'},
-                              style={'marginTop': '1rem', 'text-align':'center', 'margin-Left': '4px'})]),
-                dcc.RadioItems(id='disaster-click', 
-                              options=[
-                                {'label': 'Wildfires', 'value': 'Wildfires'},
-                                {'label': 'storm', 'value': 'storm'},
-                                {'label': 'ice', 'value': 'ice'}],
-                              value=['Wildfires'],
-                              style={'marginTop': '1rem', 'text-align':'center', 'margin-Left': '4px'}),
-        ], className='eleven columns', style={'marginLeft': 5, 'marginTop': '10%'}),
-    ], className='row eleven columns')
+                html.Div(children=[
+                    html.H5("Disaster Status", style={'fontSize': '1.5rem', 'height': '45px', 'bottom': '0px',
+                                                    'paddingLeft': '4px', 'color': '#a3a7b0',
+                                                    'textDecoration': 'none', 'text-align':'center'}),
+                    dcc.Checklist(id='status-checkbox', 
+                                options=[
+                                    {'label': 'open', 'value': 'open'},
+                                    {'label': 'closed', 'value': 'closed'}],
+                                value=['open', 'closed'],
+                                labelStyle={'display': 'inline-block'},
+                                style={'text-align':'center', 'margin-Left': '4px'})
+                                ], className='three rows'),
+                html.Div(children=[
+                    html.H5("Disaster Kind", style={'fontSize': '1.5rem', 'height': '45px', 'bottom': '15px',
+                                                'paddingLeft': '4px', 'color': '#a3a7b0',
+                                                'textDecoration': 'none', 'text-align':'center'}),
+                    dcc.RadioItems(id='disaster-click', 
+                                options=[
+                                    {'label': 'Wildfires', 'value': 'wf'},
+                                    {'label': 'storm', 'value': 'stm'},
+                                    {'label': 'Icelake', 'value': 'ice'}],
+                                #value=['wf'],
+                                style={'marginTop': '1rem', 'text-align':'center', 'margin-Left': '4px'})
+                                ], className='eleven columns')
+                ], className='eleven columns', style={'marginLeft': 5, 'marginTop': '10%'}),
+            ], className='row eleven columns')
+        ], className='row eleven columns')
 
 
 def static_stacked_trend_graph(stack=False):
