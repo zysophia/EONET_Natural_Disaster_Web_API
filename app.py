@@ -49,22 +49,19 @@ def disaster_visualization_tool():
     Returns the disaster_visualization tool as a dash `html.Div`.
     """
     return html.Div(children=[
-        html.Div(children=[dcc.Graph(id='what-if-figure')], className='nine columns'),
+        #html.Div(children=[dcc.Graph(id='dis-figure')], className='nine columns'),
 
         html.Div(children=[
+            html.Div(children=[
+                dcc.Checklist(id='status-checkbox', 
+                              options=[
+                                {'label': 'New York City', 'value': 'NYC'},
+                                {'label': 'Montréal', 'value': 'MTL'},
+                                {'label': 'San Francisco', 'value': 'SF'}],
+                              value=['MTL', 'SF'],
+                              labelStyle={'display': 'inline-block'},
+                              style={'marginTop': '2rem'})]),
             html.H5("Rescale Power Supply", style={'marginTop': '2rem'}),
-            html.Div(children=[
-                dcc.Slider(id='wind-scale-slider', min=0, max=4, step=0.1, value=2.5, className='row',
-                           marks={x: str(x) for x in np.arange(0, 4.1, 1)})
-            ], style={'marginTop': '5rem'}),
-
-            html.Div(id='wind-scale-text', style={'marginTop': '1rem'}),
-
-            html.Div(children=[
-                dcc.Slider(id='hydro-scale-slider', min=0, max=4, step=0.1, value=0,
-                           className='row', marks={x: str(x) for x in np.arange(0, 4.1, 1)})
-            ], style={'marginTop': '3rem'}),
-            html.Div(id='hydro-scale-text', style={'marginTop': '1rem'}),
         ], className='three columns', style={'marginLeft': 5, 'marginTop': '10%'}),
     ], className='row eleven columns')
 
