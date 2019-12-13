@@ -35,7 +35,7 @@ def upsert_wea(df):
     collection = db.get_collection("weather")
     update_count = 0
     for record in df.to_dict('records'):
-        print(record[['long','lat','date']])
+        print(record['long','lat','date'])
         result = collection.replace_one(
             filter=record[['long','lat','date']],       # locate the document if exists
             replacement=record,                         # latest document
