@@ -164,7 +164,7 @@ def disaster_visual_handler(status, disaster):
     df = fetch_all_dis_as_df(allow_cached=True)
     if df is None:
         return go.Figure()
-    return map_plot(df[(df['title'] == disaster) & df.status.isin(status)])
+    return map_plot(df[(df['title'] == disaster) & df['status'].isin(status)])
 
 @app.callback(
     dash.dependencies.Output('wind-scale-text', 'children'),

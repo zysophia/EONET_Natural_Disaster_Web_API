@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 
 def map_plot(df):
-    fig = px.scatter_mapbox(df, lat="geo2", lon="geo1", hover_name="title", hoverinfo='none',
+    fig = px.scatter_mapbox(df, lat="geo2", lon="geo1", hover_name="title",
                         color = 'status', zoom=1.5, height=400,width=900)
     fig.update_layout(
         mapbox_style="white-bg",
