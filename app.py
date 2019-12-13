@@ -40,7 +40,7 @@ def description():
     Returns overall project description in markdown
     """
     return html.Div(children=[dcc.Markdown('''
-        In this part we will give a visualization of recent disasters.
+        In this part we will give a visualization of recent disasters.(happening/not happening but in 1year)
         ''', className='eleven columns', style={'paddingLeft': '5%'})], className="row")
 
 
@@ -53,7 +53,7 @@ def disaster_visualization_tool():
                                                 'textDecoration': 'none', 'text-align':'center', 'paddingLeft': '70px'}),
         html.Div(children=[
             html.Div(children=[
-                html.H6("Disaster Status", style={'fontSize': '1.5rem', 'paddingLeft': '54px', 'color': '#a3a7b0',
+                html.H6("Disaster Status", style={'fontSize': '2rem', 'paddingLeft': '54px', 'color': '#a3a7b0',
                                                 'textDecoration': 'none', 'text-align':'center',
                                                 'paddingRight': '30px', 'display': 'inline-block'}),
                 dcc.Checklist(id='status-checkbox', 
@@ -65,7 +65,7 @@ def disaster_visualization_tool():
                             style={'display': 'inline-block'})
                             ], className='twelve columns', style={'width':'100%','textAlign': 'center'}),
             html.Div(children=[
-                html.H5("Disaster Kind", style={'fontSize': '1.5rem',
+                html.H6("Disaster Kind", style={'fontSize': '2rem',
                                             'paddingLeft': '20px', 'color': '#a3a7b0',
                                             'textDecoration': 'none', 'margin-Left': '50px'}),
                 dcc.RadioItems(id='disaster-click', 
@@ -82,40 +82,45 @@ def disaster_visualization_tool():
 
 
 
-def what_if_description():
+def alarm_description():
     """
     Returns description of "What-If" - the interactive component
     """
     return html.Div(children=[
         dcc.Markdown('''
-        # " What If "
-        This is the what if description.''', className='eleven columns', style={'paddingLeft': '5%'})
+        # " Disaster Alarm "
+        This is the disaster alarm description.''', className='eleven columns', style={'paddingLeft': '5%'})
     ], className="row")
 
-def what_if_tool():
+def alarm_tool():
     """
     Returns the What-If tool as a dash `html.Div`. The view is a 8:3 division between
     demand-supply plot and rescale sliders.
     """
     return html.Div(children=[
-        html.Div(children=[dcc.Graph(id='what-if-figure')], className='nine columns'),
-
+        html.H5("Disaster Alarming", style={'fontSize': '3rem', 'height': '40px','color': '#a3a7b0',
+                                                'textDecoration': 'none', 'text-align':'center', 'paddingLeft': '70px'}),
         html.Div(children=[
-            html.H5("Rescale Power Supply", style={'marginTop': '2rem'}),
+            html.H6("Disaster Kind", style={'fontSize': '2rem',
+                                            'paddingLeft': '27px', 'color': '#a3a7b0',
+                                            'textDecoration': 'none', 'margin-Left': '50px'}),
+            dcc.RadioItems(id='disaster-click2', 
+                            options=[
+                                {'label': 'Wildfires', 'value': 'Wildfires'},
+                                {'label': 'Severe_Storms', 'value': 'Severe_Storms'},
+                                {'label': 'Sea_and_Lake_Ice', 'value': 'Sea_and_Lake_Ice'}],
+                            value='Wildfires',
+                            style={'paddingLeft': '0px'}),
+            html.H6("Alarm Rate", style={'fontSize': '2rem', 'paddingTop': '30px',
+                                            'paddingLeft': '31px', 'color': '#a3a7b0',
+                                            'textDecoration': 'none', 'margin-Left': '50px'}),
             html.Div(children=[
-                dcc.Slider(id='wind-scale-slider', min=0, max=4, step=0.1, value=2.5, className='row',
-                           marks={x: str(x) for x in np.arange(0, 4.1, 1)})
-            ], style={'marginTop': '5rem'}),
-
-            html.Div(id='wind-scale-text', style={'marginTop': '1rem'}),
-
-            html.Div(children=[
-                dcc.Slider(id='hydro-scale-slider', min=0, max=4, step=0.1, value=0,
-                           className='row', marks={x: str(x) for x in np.arange(0, 4.1, 1)})
-            ], style={'marginTop': '3rem'}),
-            html.Div(id='hydro-scale-text', style={'marginTop': '1rem'}),
-        ], className='three columns', style={'marginLeft': 5, 'marginTop': '10%'}),
-    ], className='row eleven columns')
+                dcc.Slider(id='alarm-rate-slider', min=0.1, max=0.901, step=0.1, value=0.5, className='row',
+                           marks={x: "{:.1f}".format(x) for x in np.arange(0.1, 1.0, 0.2)})
+            ], style={'marginTop': '1.5rem'}),
+        ], className='two columns', style={'marginLeft': 0, 'marginTop': '10%'}),
+        html.Div(children=[dcc.Graph(id='alarm-figure')], className='ten columns', style={'marginBottom': '5%','paddingTop':'1%'}),
+    ], className='row twelve columns')
 
 
 
@@ -146,10 +151,8 @@ app.layout = html.Div([
     html.Hr(),
     description(),
     disaster_visualization_tool(),
-    # dcc.Graph(id='trend-graph', figure=static_stacked_trend_graph(stack=False)),
-    #dcc.Graph(id='stacked-trend-graph', figure=static_stacked_trend_graph(stack=True)),
-    what_if_description(),
-    what_if_tool(),
+    alarm_description(),
+    alarm_tool(),
     architecture_summary(),
 ], className='row', id='content')
 
@@ -166,30 +169,14 @@ def disaster_visual_handler(status, disaster):
         return go.Figure()
     return map_plot(df[(df['title'] == disaster) & df['status'].isin(status)])
 
-@app.callback(
-    dash.dependencies.Output('wind-scale-text', 'children'),
-    [dash.dependencies.Input('wind-scale-slider', 'value')])
-def update_wind_sacle_text(value):
-    """Changes the display text of the wind slider"""
-    return "Wind Power Scale {:.2f}x".format(value)
+_alarm_data_cache = None
 
 
 @app.callback(
-    dash.dependencies.Output('hydro-scale-text', 'children'),
-    [dash.dependencies.Input('hydro-scale-slider', 'value')])
-def update_hydro_sacle_text(value):
-    """Changes the display text of the hydro slider"""
-    return "Hydro Power Scale {:.2f}x".format(value)
-
-
-_what_if_data_cache = None
-
-
-@app.callback(
-    dash.dependencies.Output('what-if-figure', 'figure'),
-    [dash.dependencies.Input('wind-scale-slider', 'value'),
-     dash.dependencies.Input('hydro-scale-slider', 'value')])
-def what_if_handler(wind, hydro):
+    Output('alarm-figure', 'figure'),
+    [Input('disaster-click2', 'value'),
+     Input('alarm-rate-slider', 'value')])
+def alarm_handler(wind, hydro):
     """Changes the display graph of supply-demand"""
     ##df = fetch_all_dis_as_df(allow_cached=True)
     fig = go.Figure()

@@ -4,6 +4,7 @@ Earth Observatory Natural Event Tracker.
 import time
 import sched
 import pandas as pd
+from datetime import datetime
 import json
 import logging
 import requests
@@ -11,11 +12,12 @@ import numpy as np
 from io import StringIO
 
 import utils
-from database import upsert_dis
+from database import upsert_dis, upsert_wea
 
 
 DIS_SOURCE = "https://eonet.sci.gsfc.nasa.gov/api/v2.1/events"
-MAX_DOWNLOAD_ATTEMPT = 5
+W_SOURCE = "https://api.darksky.net/forecast/b4c50d35d2b602d506c708a505757c25/"
+MAX_DOWNLOAD_ATTEMPT = 3
 DOWNLOAD_PERIOD = 120        # second
 logger = logging.Logger(__name__)
 utils.setup_logger(logger, 'data.log')
@@ -62,10 +64,46 @@ def filter_dis(js, status):
     return df
 
 
-def update_once():
+def download_weather(url=W_SOURCE, retries=MAX_DOWNLOAD_ATTEMPT, lat=34, lon=-118, timeout=1.0):
+    """Returns weather forecast information dataframe from `W_SOURCE` that includes weather information
+    Returns None if network failed
+    """
+    df = None
+    for _ in range(retries):
+        try:
+            req = requests.get(f"{url}{lat},{lon}", timeout=timeout)
+            req.raise_for_status()
+            text = req.text
+            js = json.loads(text)
+            data = js['daily']['data']
+
+            df = pd.DataFrame()
+            for forecast in data:
+                dt = datetime.fromtimestamp(forecast['time'])
+                if dt < datetime.now():
+                    continue
+                fore_dict = {k:v for k,v in forecast.items() if ('Time' not in k and 'icon' not in k and 'summary' not in k and 'precip' not in k and 'time' not in k)}
+                fore_dict['long'], fore_dict['lat'],  fore_dict['date']= lon, lat, dt.date()
+                df = df.append(fore_dict, ignore_index=True)
+        except requests.exceptions.HTTPError as e:
+            logger.warning("Retry on HTTP Error: {}".format(e))
+    if js is None:
+        logger.error('download_wea too many FAILED attempts')
+    return df
+
+
+def update_once_d():
     t, s = download_disaster(limit = 1000, days = 100)
     df = filter_dis(t, s)
     upsert_dis(df)
+
+
+def update_once_w():
+    df1 = download_weather(lat=34, lon=-118)
+    upsert_wea(df1)
+    df2 = download_weather(lat=34, lon=-118)
+    upsert_wea(df2)
+
 
 def update_history():
     try:
@@ -85,7 +123,8 @@ def main_loop(timeout=DOWNLOAD_PERIOD):
 
     def _worker():
         try:
-            update_once()
+            update_once_d()
+            update_once_w()
         except Exception as e:
             logger.warning("main loop worker ignores exception and continues: {}".format(e))
         scheduler.enter(timeout, 1, _worker)    # schedule the next event
