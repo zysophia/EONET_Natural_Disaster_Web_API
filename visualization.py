@@ -3,7 +3,7 @@ import plotly.express as px
 
 def map_plot(df,col=["orange"]):
     fig = px.scatter_mapbox(df, lat="geo2", lon="geo1", hover_name="title",
-                        color_discrete_sequence=col, zoom=1.5, height=400,width=1000)
+                        color_discrete_sequence=df['status'], zoom=1.5, height=400,width=900)
     fig.update_layout(
         mapbox_style="white-bg",
         mapbox_layers=[

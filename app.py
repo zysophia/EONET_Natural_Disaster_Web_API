@@ -24,13 +24,13 @@ def page_header():
     """
     return html.Div(id='header', children=[
         html.Div([html.H3('EONET Natural Disaster Analysis')],
-                 className="ten columns"),
+                 className="nine columns"),
         html.A([html.Img(id='logo', src=app.get_asset_url('404_img.png'),
-                         style={'height': '20px', 'paddingTop': '10%'}),
-                html.Span('Data1050-Team-404!', style={'fontSize': '1.7rem', 'height': '45px', 'bottom': '15px',
+                         style={'height': '35px', 'paddingTop': '7%', 'paddingRight': '7%', 'paddingLeft': '7%'}),
+                html.Span('Data1050-Team-404!', style={'fontSize': '2rem', 'height': '25px', 
                                                 'paddingLeft': '4px', 'color': '#a3a7b0',
                                                 'textDecoration': 'none'})],
-               className="two columns row",
+               className="three columns row",
                href='https://github.com/zysophia/EONET_Natural_Disaster_Web_API'),
     ], className="row")
 
@@ -50,12 +50,12 @@ def disaster_visualization_tool():
     """
     return html.Div(children=[
         html.H5("Disaster Visualization", style={'fontSize': '3rem', 'height': '40px','color': '#a3a7b0',
-                                                'textDecoration': 'none', 'text-align':'center'}),
+                                                'textDecoration': 'none', 'text-align':'center', 'paddingLeft': '70px'}),
         html.Div(children=[
             html.Div(children=[
-                html.H6("Disaster Status", style={'fontSize': '1.5rem', 'paddingLeft': '4px', 'color': '#a3a7b0',
+                html.H6("Disaster Status", style={'fontSize': '1.5rem', 'paddingLeft': '54px', 'color': '#a3a7b0',
                                                 'textDecoration': 'none', 'text-align':'center',
-                                                'paddingRight': '20px', 'display': 'inline-block'}),
+                                                'paddingRight': '30px', 'display': 'inline-block'}),
                 dcc.Checklist(id='status-checkbox', 
                             options=[
                                 {'label': 'open', 'value': 'open'},
@@ -66,7 +66,7 @@ def disaster_visualization_tool():
                             ], className='twelve columns', style={'width':'100%','textAlign': 'center'}),
             html.Div(children=[
                 html.H5("Disaster Kind", style={'fontSize': '1.5rem',
-                                            'paddingLeft': '70px', 'color': '#a3a7b0',
+                                            'paddingLeft': '20px', 'color': '#a3a7b0',
                                             'textDecoration': 'none', 'margin-Left': '50px'}),
                 dcc.RadioItems(id='disaster-click', 
                             options=[
@@ -74,7 +74,7 @@ def disaster_visualization_tool():
                                 {'label': 'Severe_Storms', 'value': 'Severe_Storms'},
                                 {'label': 'Sea_and_Lake_Ice', 'value': 'Sea_and_Lake_Ice'}],
                             value='Wildfires',
-                            style={'paddingLeft': '40px'})
+                            style={'paddingLeft': '0px'})
                             ], className='two columns', style={'marginLeft': 0, 'marginTop': '10%'}),
             html.Div(children=[dcc.Graph(id='disaster-figure')], className='ten columns')
             ], className='row twelve columns', style={'marginBottom': '5%', 'marginTop': '1%'})
@@ -164,7 +164,7 @@ def disaster_visual_handler(status, disaster):
     df = fetch_all_dis_as_df(allow_cached=True)
     if df is None:
         return go.Figure()
-    return map_plot(df)
+    return map_plot(df[df['title'] == disaster])
 
 @app.callback(
     dash.dependencies.Output('wind-scale-text', 'children'),
