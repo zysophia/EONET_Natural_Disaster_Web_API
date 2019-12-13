@@ -135,5 +135,5 @@ def main_loop(timeout=DOWNLOAD_PERIOD):
 
 
 if __name__ == '__main__':
-    update_history()
+    #update_history()
     main_loop()
