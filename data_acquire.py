@@ -35,10 +35,10 @@ def download_disaster(url=DIS_SOURCE, retries=MAX_DOWNLOAD_ATTEMPT, limit = 10, 
             logger.warning("Retry on HTTP Error: {}".format(e))
     if js is None:
         logger.error('download_dis too many FAILED attempts')
-    return js
+    return js, status
 
 
-def filter_dis(js):
+def filter_dis(js, status):
     """Converts `json` to `DataFrame`
     """
     data = []
@@ -63,15 +63,15 @@ def filter_dis(js):
 
 
 def update_once():
-    t = download_disaster(limit = 1000, days = 100)
-    df = filter_dis(t)
+    t, s = download_disaster(limit = 1000, days = 100)
+    df = filter_dis(t, s)
     upsert_dis(df)
 
 def update_history():
     try:
-        t = download_disaster(limit = 1000, days = 1000, status = "closed", timeout = 60.0)
+        t, s = download_disaster(limit = 1000, days = 1000, status = "closed", timeout = 60.0)
         print("History disaster data requested..........")
-        df = filter_dis(t)
+        df = filter_dis(t, s)
         print("History disaster data filtered..........")
         upsert_dis(df)
         print("History disaster data updated..........")
