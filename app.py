@@ -49,50 +49,38 @@ def disaster_visualization_tool():
     Returns the disaster_visualization tool as a dash `html.Div`.
     """
     return html.Div(children=[
-        html.H5("Disaster Visualization", style={'fontSize': '3rem', 'height': '45px', 'bottom': '15px',
-                                                'paddingLeft': '4px', 'color': '#a3a7b0',
+        html.H5("Disaster Visualization", style={'fontSize': '3rem', 'height': '40px','color': '#a3a7b0',
                                                 'textDecoration': 'none', 'text-align':'center'}),
-
         html.Div(children=[
             html.Div(children=[
-                html.Div(children=[
-                    html.H5("Disaster Status", style={'fontSize': '1.5rem', 'height': '45px', 'bottom': '0px',
-                                                    'paddingLeft': '4px', 'color': '#a3a7b0',
-                                                    'textDecoration': 'none', 'text-align':'center', 'display': 'inline-block'}),
-                    dcc.Checklist(id='status-checkbox', 
-                                options=[
-                                    {'label': 'open', 'value': 'open'},
-                                    {'label': 'closed', 'value': 'closed'}],
-                                value=['open', 'closed'],
-                                labelStyle={'display': 'inline-block'},
-                                style={'text-align':'center', 'margin-Left': '4px', 'display': 'inline-block'})
-                                ], className='parent', style={'display': 'inline-block'}),
-                html.Div(children=[
-                    html.H5("Disaster Kind", style={'fontSize': '1.5rem', 'height': '45px', 'bottom': '15px',
-                                                'paddingLeft': '4px', 'color': '#a3a7b0',
-                                                'textDecoration': 'none', 'text-align':'center'}),
-                    dcc.RadioItems(id='disaster-click', 
-                                options=[
-                                    {'label': 'Wildfires', 'value': 'wf'},
-                                    {'label': 'storm', 'value': 'stm'},
-                                    {'label': 'Icelake', 'value': 'ice'}],
-                                #value=['wf'],
-                                style={'marginTop': '1rem', 'text-align':'center', 'margin-Left': '4px'})
-                                ], className='eleven columns')
-                ], className='eleven columns', style={'marginLeft': 5, 'marginTop': '10%'}),
-            ], className='row eleven columns')
-        ], className='row eleven columns')
+                html.H6("Disaster Status", style={'fontSize': '1.5rem', 'paddingLeft': '4px', 'color': '#a3a7b0',
+                                                'textDecoration': 'none', 'text-align':'center',
+                                                'paddingRight': '20px', 'display': 'inline-block'}),
+                dcc.Checklist(id='status-checkbox', 
+                            options=[
+                                {'label': 'open', 'value': 'open'},
+                                {'label': 'closed', 'value': 'closed'}],
+                            value=['open', 'closed'],
+                            labelStyle={'display': 'inline-block'},
+                            style={'display': 'inline-block'})
+                            ], className='twelve columns', style={'width':'100%','textAlign': 'center'}),
+            html.Div(children=[
+                html.H5("Disaster Kind", style={'fontSize': '1.5rem',
+                                            'paddingLeft': '70px', 'color': '#a3a7b0',
+                                            'textDecoration': 'none', 'margin-Left': '50px'}),
+                dcc.RadioItems(id='disaster-click', 
+                            options=[
+                                {'label': 'Wildfires', 'value': 'Wildfires'},
+                                {'label': 'Severe_Storms', 'value': 'Severe_Storms'},
+                                {'label': 'Sea_and_Lake_Ice', 'value': 'Sea_and_Lake_Ice'}],
+                            value='Wildfires',
+                            style={'paddingLeft': '40px'})
+                            ], className='two columns', style={'marginLeft': 0, 'marginTop': '10%'}),
+            html.Div(children=[dcc.Graph(id='disaster-figure')], className='ten columns')
+            ], className='row twelve columns', style={'marginBottom': '5%', 'marginTop': '1%'})
+        ], className='row twelve columns')
 
 
-def static_stacked_trend_graph(stack=False):
-    """
-    Returns a figure.
-    """
-    df = fetch_all_dis_as_df()
-    if df is None:
-        return go.Figure()
-    return map_plot(df)
-    #return go.Figure()
 
 def what_if_description():
     """
@@ -130,6 +118,8 @@ def what_if_tool():
     ], className='row eleven columns')
 
 
+
+
 def architecture_summary():
     """
     Returns the text and image of architecture summary of the project.
@@ -164,6 +154,18 @@ app.layout = html.Div([
 ], className='row', id='content')
 
 
+
+@app.callback(
+    Output('disaster-figure', 'figure'),
+    [Input('status-checkbox', 'value'),
+     Input('disaster-click', 'value')])
+def disaster_visual_handler(status, disaster):
+    """Changes the display graph of supply-demand"""
+    df = fetch_all_dis_as_df(allow_cached=True)
+    if df is None:
+        return go.Figure()
+    return map_plot(df)
+
 @app.callback(
     dash.dependencies.Output('wind-scale-text', 'children'),
     [dash.dependencies.Input('wind-scale-slider', 'value')])
@@ -189,8 +191,7 @@ _what_if_data_cache = None
      dash.dependencies.Input('hydro-scale-slider', 'value')])
 def what_if_handler(wind, hydro):
     """Changes the display graph of supply-demand"""
-    df = fetch_all_dis_as_df(allow_cached=True)
-    print(df)
+    ##df = fetch_all_dis_as_df(allow_cached=True)
     fig = go.Figure()
     return fig
 
