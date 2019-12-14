@@ -22,7 +22,7 @@ def alarm_predict(city='LA', arate=1):
     else:
         dfx = dfx[dfx['lat']==47]
     X_test = dfx.drop('date',1).values
-    print(dfx['date'], reg.predict(X_test))
+
     return dfx['date'], reg.predict(X_test)
 
 def map_plot(df):
@@ -86,9 +86,7 @@ def alarm_visualization(city, rate):
     fig.add_trace(go.Scatter(x=df_u['date'], y=df_u['temperatureHigh'], mode='lines', name='High Temperature',
                              line={'width': 2, 'color': 'orange'}), secondary_y=False)
 
-    # fig.add_trace(go.Scatter(x=df_u['date'], y=df_u['windSpeed'], mode='lines', name='Wind Speed',
-    #                          line={'width': 2, 'color': 'red'}, stackgroup='stack'), secondary_y=True)
-
+                             
     d2, y2 = alarm_predict(city, rate)
     fig.add_trace(go.Scatter(x=d2, y=y2, mode='lines', name='Predicted WildFire',
                              line={'width': 2, 'color': 'red'}, stackgroup='stack'), secondary_y=True)

@@ -116,7 +116,7 @@ def alarm_tool():
                                             'paddingLeft': '31px', 'color': '#a3a7b0',
                                             'textDecoration': 'none', 'margin-Left': '50px'}),
             html.Div(children=[
-                dcc.Slider(id='alarm-rate-slider', min=1, max=3.001, step=1, value=0.5, className='row',
+                dcc.Slider(id='alarm-rate-slider', min=1, max=3.001, step=1, value=1, className='row',
                            marks={x: "{:.0f}".format(x) for x in [1, 2, 3]})
             ], style={'marginTop': '1.5rem'}),
         ], className='two columns', style={'marginLeft': 0, 'marginTop': '10%'}),
