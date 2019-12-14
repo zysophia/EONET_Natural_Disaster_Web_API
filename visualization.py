@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 from datetime import datetime, timedelta
 from database import fetch_all_wea_as_df
 from plotly.subplots import make_subplots
+from sklearn.ensemble import RandomForestRegressor
 
 import pickle
 
@@ -98,5 +99,9 @@ def alarm_visualization(city, rate):
                       plot_bgcolor='#23272c',
                       paper_bgcolor='#23272c',
                       yaxis_title='Alarm Rate',
-                      xaxis_title='Date/Time')
+                      xaxis_title='Date/Time',
+                      )
     return fig
+
+if __name__=='__main__':
+    print(alarm_predict(city='LA', arate=1))
