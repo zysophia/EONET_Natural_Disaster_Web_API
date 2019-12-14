@@ -16,7 +16,7 @@ def alarm_predict(city='LA', arate=1):
     if city not in ['LA', 'ST']:
         return None
     dfx = fetch_all_wea_as_df()
-    dfx = dfx[dfx['date']>datetime.now()].sort_values(by='date')
+    dfx = dfx[dfx['date']>datetime.now()-timedelta(days=1)].sort_values(by='date')
     if city=='LA':
         dfx = dfx[dfx['lat']==34]
     else:
@@ -51,8 +51,7 @@ def map_plot(df):
             ),
             text=['disaster open'],
     ))
-    # fig.add_trace(px.scatter_mapbox(df, lat="geo2", lon="geo1", hover_name="title",
-    #                     color = 'status', zoom=1.5, height=400,width=900))
+
     fig.update_layout(
         mapbox_style="white-bg",
         width=900,
@@ -86,10 +85,12 @@ def alarm_visualization(city, rate):
     fig.add_trace(go.Scatter(x=df_u['date'], y=df_u['temperatureHigh'], mode='lines', name='High Temperature',
                              line={'width': 2, 'color': 'orange'}), secondary_y=False)
 
-                             
-    d2, y2 = alarm_predict(city, rate)
-    fig.add_trace(go.Scatter(x=d2, y=y2, mode='lines', name='Predicted WildFire',
-                             line={'width': 2, 'color': 'red'}, stackgroup='stack'), secondary_y=True)
+    try:                         
+        d2, y2 = alarm_predict(city, rate)
+        fig.add_trace(go.Scatter(x=d2, y=y2, mode='lines', name='Predicted WildFire',
+                                line={'width': 2, 'color': 'red'}, stackgroup='stack'), secondary_y=True)
+    except:
+        pass
 
 
     fig.update_layout(template='plotly_dark',
