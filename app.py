@@ -42,8 +42,29 @@ def description():
     Returns overall project description in markdown
     """
     return html.Div(children=[dcc.Markdown('''
-        In this part we will give a visualization of recent disasters.(happening/not happening but in 1year)
+        # Natural Disaster Detector
+        Every year, natural and human induced disasters have caused enourmous infrastructural damages, monetary 
+        cost, injuries and even deaths. In June 2018, California Wildfire caused families losed their homes, and 
+        the government spent millions of dollars on operations. 
+
+        Unfortunately, climae changes are strengthening the destructive power of natural disasters. In this
+        context, Natural Disaster Detector used The Earth Observatory Natural Event Tracker (EONET) to track
+        entire globe daily and look for natural events, such as Wildfires, Storms, and Sea lake Ice, which are 
+        happening now (see orange points on the map) or already happened (see green points on the map) within one year. 
+
+        **"Disaster Alarm" is a Prediction Tool** to forecast the possibility of natural disasters occurrence. It 
+        can be used to explore the Wildfire Rate in Seattle and Los Angeles Area based on weather and temperature
+        of selected area using Dark Sky API.
+
+        ### Data Source
+        Natural Disaster Detector utilize near-real-time natural event occurrence data from
+        [EONET] (https://eonet.sci.gsfc.nasa.gov/docs/v2.1), and weather data from [Dark Sky]
+         (https://darksky.net/dev/docs/sources). The data source [] **updates every 5 minutes**, 
+         and please **do not leave the Detector open for the whole day, as the Dark Sky API will charge 
+         if over 1000 queries each day**.
+
         ''', className='eleven columns', style={'paddingLeft': '5%'})], className="row")
+
 
 
 def disaster_visualization_tool():
@@ -91,7 +112,11 @@ def alarm_description():
     return html.Div(children=[
         dcc.Markdown('''
         # " Disaster Alarm "
-        This is the disaster alarm description.''', className='eleven columns', style={'paddingLeft': '5%'})
+        So far, Natural Disaster Dector has displayed the detection of natural disasters daily on a 
+        global scale. In order to make the Detector more relevant to domestic natural events, what is
+        the probability that Seattle and Los Angeles will suffer from wildfire? Find below ** **
+        
+        ''', className='eleven columns', style={'paddingLeft': '5%'})
     ], className="row")
 
 def alarm_tool():
@@ -108,7 +133,7 @@ def alarm_tool():
                                             'textDecoration': 'none', 'margin-Left': '50px'}),
             dcc.RadioItems(id='city-click', 
                             options=[
-                                {'label': 'Los Angels (CA)', 'value': 'LA'},
+                                {'label': 'Los Angeles (CA)', 'value': 'LA'},
                                 {'label': 'Seattle (WA)', 'value': 'ST'}],
                             value='LA',
                             style={'paddingLeft': '15px'}),
@@ -133,7 +158,12 @@ def architecture_summary():
     return html.Div(children=[
         dcc.Markdown('''
             # Project Architecture
-            project architecture.
+            This project uses MongoDB as the database. All data acquired are stored in raw form to the
+            database (with de-duplication). An abstract layer is built in `database.py` so all queries
+            can be done via function call. For a more complicated app, the layer will also be
+            responsible for schema consistency. A `plot.ly` & `dash` app is serving this web page
+            through. Actions on responsive components on the page is redirected to `app.py` which will
+            then update certain components on the page. 
         ''', className='row eleven columns', style={'paddingLeft': '5%'}),
 
         html.Div(children=[
