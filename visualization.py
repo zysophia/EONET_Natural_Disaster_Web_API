@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from database import fetch_all_wea_as_df
 from plotly.subplots import make_subplots
 from sklearn.ensemble import RandomForestRegressor
+from prediction import kde as kde_func
 
 import pickle
 
@@ -87,8 +88,13 @@ def alarm_visualization(city, rate):
 
     try:                         
         d2, y2 = alarm_predict(city, rate)
-        fig.add_trace(go.Scatter(x=d2, y=y2, mode='lines', name='Predicted WildFire',
+        rate_f = {1:0.01, 2: 0.05, 3:0.1}
+        dfkde = kde_func(df, rate_f[rate], city.lower())
+        print(dfkde)
+        fig.add_trace(go.Scatter(x=d2, y=y2, mode='lines', name='Predicted WildFire Rate',
                                 line={'width': 2, 'color': 'red'}, stackgroup='stack'), secondary_y=True)
+        # fig.add_trace(go.Scatter(x=dfkde['date'], y=dfkde['kde'], mode='lines', name='Real WildFire Rate',
+        #                         line={'width': 2, 'color': 'red'}, stackgroup='stack'), secondary_y=True)
     except:
         pass
 
