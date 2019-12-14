@@ -4,6 +4,7 @@ from database import fetch_all_dis_as_df
 import pandas as pd
 import numpy as np
 
+
 def norm_kde(df_wf,h):
     mean_geo2 = np.mean(df_wf['geo2'])
     mean_geo1 = np.mean(df_wf['geo1'])
@@ -29,7 +30,7 @@ def kde(df,h,loc):
     df = df[df['title']=='Wildfires']
     kde = norm_kde(df,h)
     dates = []
-    for i in range(32):
+    for i in range(21):
         d = datetime.now() - timedelta(days=i)
         d = d.timetuple()
         dates.append(date(d[0],d[1],d[2]))
