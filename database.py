@@ -89,9 +89,9 @@ def fetch_all_dis_as_df(allow_cached=False):
 
 
 def fetch_all_wea_as_df(allow_cached=False):
-    """Converts list of dicts returned by `fetch_all_dis` to DataFrame with ID removed
+    """Converts list of dicts returned by `fetch_all_wea` to DataFrame with ID removed
     Actual job is done in `_worker`. When `allow_cached`, attempt to retrieve timed cached from
-    `_fetch_all_dis_as_df_cache`; ignore cache and call `_work` if cache expires or `allow_cached`
+    `_fetch_all_wea_as_df_cache`; ignore cache and call `_work` if cache expires or `allow_cached`
     is False.
     """
     def _work():

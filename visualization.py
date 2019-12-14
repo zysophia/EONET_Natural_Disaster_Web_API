@@ -4,6 +4,25 @@ import plotly.graph_objects as go
 
 from datetime import datetime, timedelta
 from database import fetch_all_wea_as_df
+from plotly.subplots import make_subplots
+
+import pickle
+
+def alarm_predict(city='LA', arate=1):
+    rate_d = {1:'002', 2:'005', 3:'010'}
+    fname = 'processed_data/rf_'+rate_d[arate]+'_'+city.lower()+'.pickle'
+    reg = pickle.load(open(fname, 'rb'))
+    if city not in ['LA', 'ST']:
+        return None
+    dfx = fetch_all_wea_as_df()
+    dfx = dfx[dfx['date']>datetime.now()].sort_values(by='date')
+    if city=='LA':
+        dfx = dfx[dfx['lat']==34]
+    else:
+        dfx = dfx[dfx['lat']==47]
+    X_test = dfx.drop('date',1).values
+    print(dfx['date'], reg.predict(X_test))
+    return dfx['date'], reg.predict(X_test)
 
 def map_plot(df):
     fig = go.Figure()
@@ -61,9 +80,18 @@ def alarm_visualization(city, rate):
         df_u = df[df['lat']==34]
     elif city == 'ST':
         df_u = df[df['lat']==47]
-    fig = go.Figure()
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+
     fig.add_trace(go.Scatter(x=df_u['date'], y=df_u['temperatureHigh'], mode='lines', name='High Temperature',
-                             line={'width': 2, 'color': 'orange'}))
+                             line={'width': 2, 'color': 'orange'}), secondary_y=False)
+
+    # fig.add_trace(go.Scatter(x=df_u['date'], y=df_u['windSpeed'], mode='lines', name='Wind Speed',
+    #                          line={'width': 2, 'color': 'red'}, stackgroup='stack'), secondary_y=True)
+
+    d2, y2 = alarm_predict(city, rate)
+    fig.add_trace(go.Scatter(x=d2, y=y2, mode='lines', name='Predicted WildFire',
+                             line={'width': 2, 'color': 'red'}, stackgroup='stack'), secondary_y=True)
+
 
     fig.update_layout(template='plotly_dark',
                       showlegend=True,

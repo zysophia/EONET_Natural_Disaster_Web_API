@@ -100,24 +100,24 @@ def alarm_tool():
     demand-supply plot and rescale sliders.
     """
     return html.Div(children=[
-        html.H5("Disaster Alarming", style={'fontSize': '3rem', 'height': '40px','color': '#a3a7b0',
+        html.H5("WildFire Alarming", style={'fontSize': '3rem', 'height': '40px','color': '#a3a7b0',
                                                 'textDecoration': 'none', 'text-align':'center', 'paddingLeft': '70px'}),
         html.Div(children=[
-            html.H6("Disaster Kind", style={'fontSize': '2rem',
-                                            'paddingLeft': '27px', 'color': '#a3a7b0',
+            html.H6("City", style={'fontSize': '2rem',
+                                            'paddingLeft': '47px', 'color': '#a3a7b0',
                                             'textDecoration': 'none', 'margin-Left': '50px'}),
             dcc.RadioItems(id='city-click', 
                             options=[
                                 {'label': 'Los Angels (CA)', 'value': 'LA'},
                                 {'label': 'Seattle (WA)', 'value': 'ST'}],
                             value='LA',
-                            style={'paddingLeft': '0px'}),
+                            style={'paddingLeft': '15px'}),
             html.H6("Alarm Rate", style={'fontSize': '2rem', 'paddingTop': '30px',
                                             'paddingLeft': '31px', 'color': '#a3a7b0',
                                             'textDecoration': 'none', 'margin-Left': '50px'}),
             html.Div(children=[
-                dcc.Slider(id='alarm-rate-slider', min=0.1, max=0.901, step=0.1, value=0.5, className='row',
-                           marks={x: "{:.1f}".format(x) for x in np.arange(0.1, 1.0, 0.2)})
+                dcc.Slider(id='alarm-rate-slider', min=1, max=3.001, step=1, value=0.5, className='row',
+                           marks={x: "{:.0f}".format(x) for x in [1, 2, 3]})
             ], style={'marginTop': '1.5rem'}),
         ], className='two columns', style={'marginLeft': 0, 'marginTop': '10%'}),
         html.Div(children=[dcc.Graph(id='alarm-figure')], className='ten columns', style={'marginBottom': '5%','paddingTop':'1%'}),
