@@ -4,8 +4,10 @@ import dash_html_components as html
 import numpy as np
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output
+from datetime import datetime
+from visualization import alarm_visualization
 
-from database import fetch_all_dis_as_df
+from database import fetch_all_dis_as_df, fetch_all_wea_as_df
 from visualization import map_plot
 
 # Definitions of constants. This projects uses extra CSS stylesheet at `./assets/style.css`
@@ -104,12 +106,11 @@ def alarm_tool():
             html.H6("Disaster Kind", style={'fontSize': '2rem',
                                             'paddingLeft': '27px', 'color': '#a3a7b0',
                                             'textDecoration': 'none', 'margin-Left': '50px'}),
-            dcc.RadioItems(id='disaster-click2', 
+            dcc.RadioItems(id='city-click', 
                             options=[
-                                {'label': 'Wildfires', 'value': 'Wildfires'},
-                                {'label': 'Severe_Storms', 'value': 'Severe_Storms'},
-                                {'label': 'Sea_and_Lake_Ice', 'value': 'Sea_and_Lake_Ice'}],
-                            value='Wildfires',
+                                {'label': 'Los Angels (CA)', 'value': 'LA'},
+                                {'label': 'Seattle (WA)', 'value': 'ST'}],
+                            value='LA',
                             style={'paddingLeft': '0px'}),
             html.H6("Alarm Rate", style={'fontSize': '2rem', 'paddingTop': '30px',
                                             'paddingLeft': '31px', 'color': '#a3a7b0',
@@ -174,13 +175,11 @@ _alarm_data_cache = None
 
 @app.callback(
     Output('alarm-figure', 'figure'),
-    [Input('disaster-click2', 'value'),
+    [Input('city-click', 'value'),
      Input('alarm-rate-slider', 'value')])
-def alarm_handler(wind, hydro):
+def alarm_handler(city, rate):
     """Changes the display graph of supply-demand"""
-    ##df = fetch_all_dis_as_df(allow_cached=True)
-    fig = go.Figure()
-    return fig
+    return alarm_visualization(city, rate)
 
 
 if __name__ == '__main__':

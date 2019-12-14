@@ -4,7 +4,7 @@ Earth Observatory Natural Event Tracker.
 import time
 import sched
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import logging
 import requests
@@ -18,7 +18,7 @@ from database import upsert_dis, upsert_wea
 DIS_SOURCE = "https://eonet.sci.gsfc.nasa.gov/api/v2.1/events"
 W_SOURCE = "https://api.darksky.net/forecast/b4c50d35d2b602d506c708a505757c25/"
 MAX_DOWNLOAD_ATTEMPT = 3
-DOWNLOAD_PERIOD = 120        # second
+DOWNLOAD_PERIOD = 300        # second
 logger = logging.Logger(__name__)
 utils.setup_logger(logger, 'data.log')
 
@@ -75,15 +75,26 @@ def download_weather(url=W_SOURCE, retries=MAX_DOWNLOAD_ATTEMPT, lat=34, lon=-11
             req.raise_for_status()
             text = req.text
             js = json.loads(text)
-            data = js['daily']['data']
+            data1 = js['daily']['data']
+
+            tstamp = int(datetime.now().timestamp())
+            all_data = []
+            for ts in range(tstamp, tstamp-86400*30, -86400):
+                req = requests.get(f'{url}{lat},{lon},{ts}?exclude=hourly,currently', timeout=3.0)
+                req.raise_for_status()
+                text = req.text
+                js = json.loads(text)
+                data = js['daily']['data'][0]
+                all_data.append(data)
+            data = data1+all_data
 
             df = pd.DataFrame()
             for forecast in data:
                 dt = datetime.fromtimestamp(forecast['time'])
-                if dt < datetime.now():
+                if dt < datetime.now()-timedelta(days=30):
                     continue
                 fore_dict = {k:v for k,v in forecast.items() if ('Time' not in k and 'icon' not in k and 'summary' not in k and 'precip' not in k and 'time' not in k)}
-                fore_dict['long'], fore_dict['lat'],  fore_dict['date']= lon, lat, dt.date()
+                fore_dict['long'], fore_dict['lat'],  fore_dict['date']= lon, lat, datetime(*dt.timetuple()[:3])
                 df = df.append(fore_dict, ignore_index=True)
         except requests.exceptions.HTTPError as e:
             logger.warning("Retry on HTTP Error: {}".format(e))
@@ -101,7 +112,7 @@ def update_once_d():
 def update_once_w():
     df1 = download_weather(lat=34, lon=-118)
     upsert_wea(df1)
-    df2 = download_weather(lat=34, lon=-118)
+    df2 = download_weather(lat=47, lon=-122)
     upsert_wea(df2)
 
 
@@ -135,5 +146,5 @@ def main_loop(timeout=DOWNLOAD_PERIOD):
 
 
 if __name__ == '__main__':
-    #update_history()
+    update_history()
     main_loop()

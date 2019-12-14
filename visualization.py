@@ -3,6 +3,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from datetime import datetime, timedelta
+from database import fetch_all_wea_as_df
 
 def map_plot(df):
     fig = go.Figure()
@@ -47,4 +48,27 @@ def map_plot(df):
         ])
     fig.update_layout(template='plotly_dark', 
                       margin={"r":0,"t":0,"l":0,"b":0})
+    return fig
+
+
+def alarm_visualization(city, rate):
+    """Changes the display graph of supply-demand"""
+    if city not in ['LA','ST']:
+        return go.Figure()
+    df = fetch_all_wea_as_df(allow_cached=True)
+    df = df[df['date']>datetime.now()-timedelta(days=21)].sort_values(by=['date'])
+    if city == 'LA':
+        df_u = df[df['lat']==34]
+    elif city == 'ST':
+        df_u = df[df['lat']==47]
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df_u['date'], y=df_u['temperatureHigh'], mode='lines', name='High Temperature',
+                             line={'width': 2, 'color': 'orange'}))
+
+    fig.update_layout(template='plotly_dark',
+                      showlegend=True,
+                      plot_bgcolor='#23272c',
+                      paper_bgcolor='#23272c',
+                      yaxis_title='Alarm Rate',
+                      xaxis_title='Date/Time')
     return fig
