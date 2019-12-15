@@ -43,24 +43,25 @@ def description():
     """
     return html.Div(children=[dcc.Markdown('''
         # Natural Disaster Detector
-        Every year, natural and human induced disasters have caused enourmous infrastructural damages, monetary 
-        cost, injuries and even deaths. In June 2018, California Wildfire caused families losed their homes, and 
-        the government spent millions of dollars on operations. 
+        Every year, natural and human induced disasters caused enormous infrastructural damages, monetary 
+        cost, injuries and even deaths. In June 2018, the natural disaster, Wildfire happened in California affected 
+        thousands of the families that lost their homes, and millions of dollars were spent on operations.
 
-        Unfortunately, climae changes are strengthening the destructive power of natural disasters. In this
+        Unfortunately, climate changes are strengthening the destructive power of natural disasters. In this
         context, Natural Disaster Detector used The Earth Observatory Natural Event Tracker (EONET) to track
         entire globe daily and look for natural events, such as Wildfires, Storms, and Sea lake Ice, which are 
         happening now (see orange points on the map) or already happened (see green points on the map) within one year. 
 
         **"Disaster Alarm" is a Prediction Tool** to forecast the possibility of natural disasters occurrence. It 
-        can be used to explore the Wildfire Rate in Seattle and Los Angeles Area based on weather and temperature
+        can be used to explore the Wildfire Rate in Seattle and Los Angeles area based on weather and temperature
         of selected area using Dark Sky API.
 
         ### Data Source
         Natural Disaster Detector utilize near-real-time natural event occurrence data from
         [EONET] (https://eonet.sci.gsfc.nasa.gov/docs/v2.1), and weather data from [Dark Sky]
-         (https://darksky.net/dev/docs/sources). The data source [] **updates every 5 minutes**, 
-         and please **do not leave the Detector open for the whole day, as the Dark Sky API will charge 
+         (https://darksky.net/dev/docs/sources). The database **updates every 5 minutes**, and 
+         our data source [https://eonet.sci.gsfc.nasa.gov/docs/v2.1] **updates four times
+         a day**. And please **do not leave the Detector open for the whole day, as the Dark Sky API will charge 
          if over 1000 queries each day**.
 
         ''', className='eleven columns', style={'paddingLeft': '5%'})], className="row")
@@ -112,10 +113,13 @@ def alarm_description():
     return html.Div(children=[
         dcc.Markdown('''
         # " Disaster Alarm "
-        So far, Natural Disaster Dector has displayed the detection of natural disasters daily on a 
-        global scale. In order to make the Detector more relevant to domestic natural events, what is
-        the probability that Seattle and Los Angeles will suffer from wildfire? Find below ** **
+        So far, Natural Disaster Detector has displayed the detection of natural disasters daily on a 
+        global scale. In order to make the Detector to be more relevant to domestic natural events, we can ask, 
+        what is the probability that Seattle and Los Angeles will suffer from wildfire? Find below what is the 
+        predicted wildfire rate ** along with different level of alarm rate? ** in different city ?
         
+        Feel free to try out more result with the sliders and cities. A fully-functioning What-If tool 
+        should support playing with other interesting aspects of the problem (e.g. predicted/real wildfire rate).
         ''', className='eleven columns', style={'paddingLeft': '5%'})
     ], className="row")
 
