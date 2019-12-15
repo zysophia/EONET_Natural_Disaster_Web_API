@@ -60,9 +60,9 @@ def description():
         Natural Disaster Detector utilize near-real-time natural event occurrence data from
         [EONET] (https://eonet.sci.gsfc.nasa.gov/docs/v2.1), and weather data from [Dark Sky]
          (https://darksky.net/dev/docs/sources). The database **updates every 5 minutes**, and 
-         our data source (https://eonet.sci.gsfc.nasa.gov/docs/v2.1) **updates four times
-         a day**. And please **do not leave the Detector open for the whole day, as the Dark Sky API will charge **Hanxiao's credit card**
-         if number of queries is over 1,000 each day**.
+         our [data source] (https://eonet.sci.gsfc.nasa.gov/docs/v2.1) **updates four times
+         a day**. And please **do not leave the Detector open for the whole day**, as the Dark Sky API will charge **Hanxiao's credit card**
+         if number of queries is over 1,000 each day.
 
         ''', className='eleven columns', style={'paddingLeft': '5%'})], className="row")
 
