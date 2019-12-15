@@ -133,7 +133,12 @@ def architecture_summary():
     return html.Div(children=[
         dcc.Markdown('''
             # Project Architecture
-            project architecture.
+            Project Software Component Architecture
+            This project uses MongoDB as the database. All data acquired are stored in raw form to the database (with deduplication). 
+            An abstract layer is built in database.py so all queries can be done via function call. 
+            For a more complicated app, the layer will also be responsible for schema consistency. A plot.ly & dash app is serving this web page through. 
+            Actions on responsive components on the page is redirected to app.py which will then update certain components on the page.
+
         ''', className='row eleven columns', style={'paddingLeft': '5%'}),
 
         html.Div(children=[
