@@ -89,7 +89,7 @@ def alarm_visualization(city, rate):
 
     try:                         
         d2, y2 = alarm_predict(city, rate)
-        rate_f = {1:0.01, 2: 0.05, 3:0.1}
+        rate_f = {1:0.2, 2: 0.5, 3:1}
         dfkde = kde_func(fetch_all_dis_as_df(), rate_f[rate], city.lower()).sort_values(by='date')
         # print(dfkde)
         fig.add_trace(go.Scatter(x=dfkde['date'], y=np.exp(dfkde['kde']), mode='lines', name='Real WildFire Rate', 
