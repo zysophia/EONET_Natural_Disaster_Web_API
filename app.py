@@ -139,7 +139,7 @@ def alarm_tool():
                             options=[
                                 {'label': 'Los Angeles (CA)', 'value': 'LA'},
                                 {'label': 'Seattle (WA)', 'value': 'ST'}],
-                            value='LA',
+                            value='ST',
                             style={'paddingLeft': '15px'}),
             html.H6("Alarm Rate", style={'fontSize': '2rem', 'paddingTop': '30px',
                                             'paddingLeft': '31px', 'color': '#a3a7b0',
