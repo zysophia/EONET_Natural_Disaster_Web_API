@@ -42,8 +42,30 @@ def description():
     Returns overall project description in markdown
     """
     return html.Div(children=[dcc.Markdown('''
-        In this part we will give a visualization of recent disasters.(happening/not happening but in 1year)
+        # Natural Disaster Detector
+        Every year, natural and human induced disasters caused enormous infrastructural damages, monetary 
+        cost, injuries and even deaths. In June 2018, the natural disaster, Wildfire happened in California affected 
+        thousands of the families that lost their homes, and millions of dollars were spent on operations.
+
+        Unfortunately, climate changes are strengthening the destructive power of natural disasters. In this
+        context, Natural Disaster Detector used The Earth Observatory Natural Event Tracker (EONET) to track
+        entire globe daily and look for natural events, such as Wildfires, Storms, and Sea lake Ice, which are 
+        happening now (see orange points on the map) or already happened (see green points on the map) within one year. 
+
+        **"Disaster Alarm" is a Prediction Tool** to forecast the possibility of natural disasters occurrence. It 
+        can be used to explore the Wildfire Rate in Seattle and Los Angeles area based on weather and temperature
+        of selected area using Dark Sky API.
+
+        ### Data Source
+        Natural Disaster Detector utilize near-real-time natural event occurrence data from
+        [EONET] (https://eonet.sci.gsfc.nasa.gov/docs/v2.1), and weather data from [Dark Sky]
+         (https://darksky.net/dev/docs/sources). The database **updates every 5 minutes**, and 
+         our data source [https://eonet.sci.gsfc.nasa.gov/docs/v2.1] **updates four times
+         a day**. And please **do not leave the Detector open for the whole day, as the Dark Sky API will charge 
+         if over 1000 queries each day**.
+
         ''', className='eleven columns', style={'paddingLeft': '5%'})], className="row")
+
 
 
 def disaster_visualization_tool():
@@ -91,7 +113,14 @@ def alarm_description():
     return html.Div(children=[
         dcc.Markdown('''
         # " Disaster Alarm "
-        This is the disaster alarm description.''', className='eleven columns', style={'paddingLeft': '5%'})
+        So far, Natural Disaster Detector has displayed the detection of natural disasters daily on a 
+        global scale. In order to make the Detector to be more relevant to domestic natural events, we can ask, 
+        what is the probability that Seattle and Los Angeles will suffer from wildfire? Find below what is the 
+        predicted wildfire rate ** along with different level of alarm rate? ** in different city ?
+        
+        Feel free to try out more result with the sliders and cities. A fully-functioning What-If tool 
+        should support playing with other interesting aspects of the problem (e.g. predicted/real wildfire rate).
+        ''', className='eleven columns', style={'paddingLeft': '5%'})
     ], className="row")
 
 def alarm_tool():
@@ -108,7 +137,7 @@ def alarm_tool():
                                             'textDecoration': 'none', 'margin-Left': '50px'}),
             dcc.RadioItems(id='city-click', 
                             options=[
-                                {'label': 'Los Angels (CA)', 'value': 'LA'},
+                                {'label': 'Los Angeles (CA)', 'value': 'LA'},
                                 {'label': 'Seattle (WA)', 'value': 'ST'}],
                             value='LA',
                             style={'paddingLeft': '15px'}),
@@ -133,12 +162,21 @@ def architecture_summary():
     return html.Div(children=[
         dcc.Markdown('''
             # Project Architecture
+<<<<<<< HEAD
             Project Software Component Architecture
             This project uses MongoDB as the database. All data acquired are stored in raw form to the database (with deduplication). 
             An abstract layer is built in database.py so all queries can be done via function call. 
             For a more complicated app, the layer will also be responsible for schema consistency. A plot.ly & dash app is serving this web page through. 
             Actions on responsive components on the page is redirected to app.py which will then update certain components on the page.
 
+=======
+            This project uses MongoDB as the database. All data acquired are stored in raw form to the
+            database (with de-duplication). An abstract layer is built in `database.py` so all queries
+            can be done via function call. For a more complicated app, the layer will also be
+            responsible for schema consistency. A `plot.ly` & `dash` app is serving this web page
+            through. Actions on responsive components on the page is redirected to `app.py` which will
+            then update certain components on the page. 
+>>>>>>> f0c1875e812265f75081300c73142f137b89831f
         ''', className='row eleven columns', style={'paddingLeft': '5%'}),
 
         html.Div(children=[
